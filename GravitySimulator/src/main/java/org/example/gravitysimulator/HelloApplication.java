@@ -16,7 +16,6 @@ public class HelloApplication extends Application {
         stage.setTitle("Coucou!");
         stage.setScene(scene);
         Button buttonTest = new Button("Button");
-        //this is a button
         stage.show();
     }
 
