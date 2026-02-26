@@ -3,6 +3,7 @@ package org.example.gravitysimulator;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Coucou!");
         stage.setScene(scene);
+        Button buttonTest = new Button("Button");
         stage.show();
     }
 
