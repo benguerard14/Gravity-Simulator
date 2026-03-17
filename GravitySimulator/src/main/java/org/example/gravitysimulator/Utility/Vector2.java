@@ -27,13 +27,13 @@ public class Vector2 {
     }
 
     public Vector2 addVector(Vector2 vector) {
-        newX += vector.getX();
-        newY += vector.getY();
+        double newX += vector.getX();
+        double newY += vector.getY();
         return Vector2(newX,newY);
     }
     public void subtractVector(Vector2 vector) {
-        newX -= vector.getX();
-        newY -= vector.getY();
+        double newX -= vector.getX();
+        double newY -= vector.getY();
         return Vector2(newX,newY);
     }
 
