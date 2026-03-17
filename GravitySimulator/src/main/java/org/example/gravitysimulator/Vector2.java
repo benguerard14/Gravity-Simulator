@@ -29,7 +29,6 @@ public class Vector2 {
     public void addVector(Vector2 vector) {
         this.x += vector.getX();
         this.y += vector.getY();
-
     }
 
     public double getNorm() {
