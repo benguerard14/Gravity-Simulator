@@ -58,18 +58,6 @@ public class SimulationHandler {
         return timeScale;
     }
 
-    public void calculateForces(double deltaTime) {
-
-    }
-
-    public void calculateVelocities(double deltaTime) {
-
-    }
-
-    public void calculatePositions(double deltaTime) {
-
-    }
-
     public void checkCollisions() {
 
     }
@@ -86,5 +74,17 @@ public class SimulationHandler {
 
     }
 
-    
+    /*
+    public void calculateForces(double deltaTime) {
+
+    }
+
+    public void calculateVelocities(double deltaTime) {
+
+    }
+
+    public void calculatePositions(double deltaTime) {
+
+    }
+     */
 }
