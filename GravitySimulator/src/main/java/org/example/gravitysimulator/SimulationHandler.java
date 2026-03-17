@@ -1,6 +1,7 @@
 package org.example.gravitysimulator;
 
 import org.example.gravitysimulator.AstralBodies.AstralBody;
+import org.example.gravitysimulator.Utility.*;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -58,16 +59,17 @@ public class SimulationHandler {
         return timeScale;
     }
 
+    //Need to patch errors related to data types
     public void calculateForces(double deltaTime) {
         for( int i = 0; i < bodies.size(); i++ ) {
-            double forceNet;
+            Vector2 forceNet;
             for( int j = 0; j < bodies.size(); j++ ) {
                 if(i==j) continue;
 
                 double ri; //to do
 
-                forceNet+= (GRAVITATIONALCONSTANT*(bodies[j].getMass())*
-                        (substractVector(bodies[j].getPosition(),bodies[i].getPosition())))/
+                forceNet += (GRAVITATIONALCONSTANT*(bodies.get(j).getMass())*
+                        (substractVector(bodies.get(j).getPosition(),bodies.get(i).getPosition())))/
                         (ri*ri*ri)
 
 
