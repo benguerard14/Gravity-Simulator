@@ -37,6 +37,11 @@ public class Vector2 {
         return Vector2(newX,newY);
     }
 
+    public void constMul(double c){
+        this.x *= c;
+        this.y *= c;
+    }
+
     public double getNorm() {
         return Math.sqrt((x*x)+(y*y));
     }
@@ -51,5 +56,10 @@ public class Vector2 {
 
     public static double getNorm(Vector2 vector){
         return vector.getNorm();
+    }
+
+    public static Vector2 constMul(Vector2 vector, double c){
+        vector.constMul(c);
+        return vector;
     }
 }
