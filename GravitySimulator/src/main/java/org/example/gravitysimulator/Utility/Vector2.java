@@ -1,4 +1,4 @@
-package org.example.gravitysimulator;
+package org.example.gravitysimulator.Utility;
 
 public class Vector2 {
 

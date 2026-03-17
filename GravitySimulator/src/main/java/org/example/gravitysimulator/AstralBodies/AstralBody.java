@@ -1,4 +1,6 @@
-package org.example.gravitysimulator;
+package org.example.gravitysimulator.AstralBodies;
+
+import org.example.gravitysimulator.Utility.Vector2;
 
 public abstract class AstralBody {
     private double mass;
@@ -24,9 +26,8 @@ public abstract class AstralBody {
         this.color = color;
     }
 
-    public Vector2 getForce(){
+    public void updateVelocity(Vector2 force){
         //todo
-        return new Vector2(0, 0);
     }
 
     public boolean checkOverlap(AstralBody body){

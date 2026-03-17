@@ -1,5 +1,7 @@
 package org.example.gravitysimulator;
 
+import org.example.gravitysimulator.AstralBodies.AstralBody;
+
 import java.util.*;
 import java.util.concurrent.*;
 
