@@ -1,4 +1,46 @@
 package org.example.gravitysimulator;
 
 public class Vector2 {
+
+    private double x;
+    private double y;
+
+    public Vector2() {}
+
+    public Vector2(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+    public double getX() {
+        return x;
+    }
+    public double getY() {
+        return y;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public void addVector(Vector2 vector) {
+        this.x += vector.getX();
+        this.y += vector.getY();
+
+    }
+
+    public double getNorm() {
+        return Math.sqrt((x*x)+(y*y));
+    }
+
+    public static void addVector(Vector2 vector1, Vector2 vector2) {
+        vector1.addVector(vector2);
+    }
+
+    public static double getNorm(Vector2 vector){
+        return vector.getNorm();
+    }
 }
