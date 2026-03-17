@@ -46,11 +46,11 @@ public class Vector2 {
         return Math.sqrt((x*x)+(y*y));
     }
 
-    public static void addVector(Vector2 vector1, Vector2 vector2) {
+    public static Vector2 addVector(Vector2 vector1, Vector2 vector2) {
         vector1.addVector(vector2);
     }
 
-    public static void subtractVector(Vector2 vector1, Vector2 vector2) {
+    public static Vector2 subtractVector(Vector2 vector1, Vector2 vector2) {
         vector1.subtractVector(vector2);
     }
 
