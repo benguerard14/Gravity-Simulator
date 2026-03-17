@@ -9,8 +9,5 @@
         <module name="GravitySimulator" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="GravitySimulator" target="21" />
-    </bytecodeTargetLevel>
   </component>
 </project>
