@@ -26,17 +26,12 @@ public abstract class AstralBody {
         this.color = color;
     }
 
-    public void updateVelocity(Vector2 force){
-        //todo
+    public void updateVelocity(Vector2 force, double deltaTime){
+        velocity.addVector(force);
     }
 
-    public boolean checkOverlap(AstralBody body){
-        return checkOverlap(this, body);
-    }
+    public void updatePosition(Vector2 velocity){
 
-    public static boolean checkOverlap(AstralBody body1, AstralBody body2){
-        //todo
-        return false;
     }
 
     public abstract void collide();
