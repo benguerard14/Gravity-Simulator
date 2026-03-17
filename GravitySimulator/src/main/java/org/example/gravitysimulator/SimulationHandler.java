@@ -59,7 +59,20 @@ public class SimulationHandler {
     }
 
     public void calculateForces(double deltaTime) {
+        for( int i = 0; i < bodies.size(); i++ ) {
+            double forceNet;
+            for( int j = 0; j < bodies.size(); j++ ) {
+                if(i==j) continue;
 
+                double ri; //to do
+
+                forceNet+= (GRAVITATIONALCONSTANT*(bodies[j].getMass())*
+                        (substractVector(bodies[j].getPosition(),bodies[i].getPosition())))/
+                        (ri*ri*ri)
+
+
+            }
+        }
     }
 
     public void calculateVelocities(double deltaTime) {

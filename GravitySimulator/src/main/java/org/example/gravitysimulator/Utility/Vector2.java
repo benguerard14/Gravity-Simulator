@@ -26,9 +26,15 @@ public class Vector2 {
         this.y = y;
     }
 
-    public void addVector(Vector2 vector) {
-        this.x += vector.getX();
-        this.y += vector.getY();
+    public Vector2 addVector(Vector2 vector) {
+        newX += vector.getX();
+        newY += vector.getY();
+        return Vector2(newX,newY);
+    }
+    public void subtractVector(Vector2 vector) {
+        newX -= vector.getX();
+        newY -= vector.getY();
+        return Vector2(newX,newY);
     }
 
     public double getNorm() {
@@ -37,6 +43,10 @@ public class Vector2 {
 
     public static void addVector(Vector2 vector1, Vector2 vector2) {
         vector1.addVector(vector2);
+    }
+
+    public static void subtractVector(Vector2 vector1, Vector2 vector2) {
+        vector1.subtractVector(vector2);
     }
 
     public static double getNorm(Vector2 vector){
