@@ -27,11 +27,12 @@ public abstract class AstralBody {
     }
 
     public void updateVelocity(Vector2 force, double deltaTime){
-        velocity.addVector(force);
+        this.velocity.addVector(Vector2.constMul(force, deltaTime));
+        updatePosition(velocity, deltaTime);
     }
 
-    public void updatePosition(Vector2 velocity){
-
+    public void updatePosition(Vector2 velocity, double deltaTime){
+        this.position.addVector(Vector2.constMul(velocity, deltaTime));
     }
 
     public abstract void collide();

@@ -5,7 +5,9 @@ public class Vector2 {
     private double x;
     private double y;
 
-    public Vector2() {}
+    public Vector2() {
+        this(0,0);
+    }
 
     public Vector2(double x, double y) {
         this.x = x;
@@ -27,14 +29,14 @@ public class Vector2 {
     }
 
     public Vector2 addVector(Vector2 vector) {
-        double newX += vector.getX();
-        double newY += vector.getY();
-        return Vector2(newX,newY);
+        double newX =  this.x + vector.getX();
+        double newY = this.y + vector.getY();
+        return new Vector2(newX,newY);
     }
-    public void subtractVector(Vector2 vector) {
-        double newX -= vector.getX();
-        double newY -= vector.getY();
-        return Vector2(newX,newY);
+    public Vector2 subtractVector(Vector2 vector) {
+        double newX =  this.x - vector.getX();
+        double newY = this.y - vector.getY();
+        return new Vector2(newX,newY);
     }
 
     public void constMul(double c){
@@ -47,12 +49,12 @@ public class Vector2 {
     }
 
     public static Vector2 addVector(Vector2 vector1, Vector2 vector2) {
-        vector1.addVector(vector2);
+        return vector1.addVector(vector2);
     }
 
 
     public static Vector2 subtractVector(Vector2 vector1, Vector2 vector2) {
-        vector1.subtractVector(vector2);
+        return vector1.subtractVector(vector2);
     }
 
     public static double getNorm(Vector2 vector){
