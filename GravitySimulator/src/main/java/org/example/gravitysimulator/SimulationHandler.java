@@ -1,5 +1,6 @@
 package org.example.gravitysimulator;
 
+import javafx.scene.shape.Circle;
 import org.example.gravitysimulator.AstralBodies.AstralBody;
 import org.example.gravitysimulator.Utility.*;
 
@@ -10,7 +11,7 @@ public class SimulationHandler {
     //Variables
     ArrayList<AstralBody> bodies = new ArrayList<>();
     ArrayList<Circle> bodiesInUI = new ArrayList<>();
-    private static double GRAVITATIONALCONSTANT = 6.6743 * Math.pow(10,-11);
+    private static final double GRAVITATIONALCONSTANT = 6.6743 * Math.pow(10,-11);
     ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
     private double updateRatePerSecond = 60;
     private boolean isRunning = false;
