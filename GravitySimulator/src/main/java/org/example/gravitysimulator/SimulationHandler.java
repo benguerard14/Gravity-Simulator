@@ -1,5 +1,6 @@
 package org.example.gravitysimulator;
 
+import javafx.scene.shape.Circle;
 import org.example.gravitysimulator.AstralBodies.AstralBody;
 import org.example.gravitysimulator.AstralBodies.*;
 import org.example.gravitysimulator.Utility.*;
@@ -10,7 +11,8 @@ import java.util.concurrent.*;
 public class SimulationHandler {
     //Variables
     ArrayList<AstralBody> bodies = new ArrayList<>();
-    private static double GRAVITATIONALCONSTANT = 6.6743 * Math.pow(10,-11);
+    ArrayList<Circle> bodiesInUI = new ArrayList<>();
+    private static final double GRAVITATIONALCONSTANT = 6.6743 * Math.pow(10,-11);
     ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
     private double updateRatePerSecond = 60;
     private boolean isRunning = false;
@@ -29,7 +31,6 @@ public class SimulationHandler {
     }
 
     public void start() {
-
     }
 
     public void close() {
@@ -46,10 +47,13 @@ public class SimulationHandler {
 
     public void addBody(AstralBody body) {
         bodies.add(body);
+        Circle circle = new Circle(body.getRadius());
+
+        bodiesInUI.add(circle);
     }
 
     public void removeBody(AstralBody body) {
-
+        bodies.remove(body);
     }
 
     public void setTimeScale(double timeScale) {
@@ -72,16 +76,11 @@ public class SimulationHandler {
 
                 AstralBody body2 = bodies.get(j);
 
-                double ri = 0;
-                Vector2 r_unit = new Vector2();
-
                 Vector2 r = Vector2.subtractVector(body2.getPosition(), body1.getPosition());
-                ri = r.getNorm();
-                r_unit = Vector2.constMul(r, 1/ri);
 
-                double accConstant = (GRAVITATIONALCONSTANT * body2.getMass())/(Math.pow(ri + 0.00001, 2));
+                double accConstant = (GRAVITATIONALCONSTANT * body2.getMass())/(Math.pow(r.getNorm() + 0.00001, 2));
 
-                accNet.addVector(Vector2.constMul(r_unit, accConstant));
+                accNet.addVector(Vector2.constMul(Vector2.normalize(r), accConstant));
 
             }
 
@@ -90,12 +89,28 @@ public class SimulationHandler {
 
 
         for(int i = 0; i < accArr.size(); i++){
-            bodies.get(i).updateVelocity(accArr.get(i), 0.067);
+            bodies.get(i).updateVelocity(accArr.get(i), deltaTime);
         }
     }
 
     public void checkCollisions() {
+        //MIGHT HAVE TO REDO -> Speed to fast and radius too small might cause planets to phase through each other
 
+        //MIGHT ALSO BE AN ISSUE NOT KNOWING WHEN IN BETWEEN PLANETS COLLIDED
+
+        for (int i = 0; i < bodies.size(); i++){
+            for(int j = 0; j < bodies.size(); j++){
+                if(i == j) continue;
+
+                AstralBody body1 = bodies.get(i);
+                AstralBody body2 = bodies.get(j);
+
+                double r = Vector2.subtractVector(body2.getPosition(), body1.getPosition()).getNorm();
+                if(r <= (body1.getRadius() + body2.getRadius())){
+                    resolveCollision(body1, body2);
+                }
+            }
+        }
     }
 
     public void resolveCollision(AstralBody body1, AstralBody body2) {
@@ -176,8 +191,52 @@ public class SimulationHandler {
     }
 
     public void simulation() {
+        long previousTime = System.currentTimeMillis();
+        scheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                //Calculate real delta time in seconds
+                long currentTime = System.currentTimeMillis();
+                long delatTime = (currentTime - previousTime)/1000;
+                previousTime = currentTime;
+
+                //Scaling time
+                delatTime = delatTime*timeScale;
+
+                //Calculations for force/acceleration velocity and displacement
+
+
+                //Updating
+
+
+            }
+        }, 0, (1 / updateRatePerSecond), TimeUnit.SECONDS);
+    }
+}
+
+/*
+class SimulationTask extends Thread implements Runnable {
+    private long previousTime;
+    private double timeScale;
+    public SimulationTask(long previousTime, double timeScale) {
+        this.previousTime = previousTime;
+        this.timeScale = timeScale;
+    }
+    @Override
+    public void run() {
+        //Checking if alive
+        if(!isAlive()) {
+            return;
+        }
+
+        //Calculate real delta time in seconds
+        long currentTime = System.currentTimeMillis();
+        long delatTime = (currentTime - previousTime)/1000;
+        previousTime = currentTime;
+
+        //Scaling time
+        delatTime = delatTime*timeScale;
+
 
     }
-
-    
 }

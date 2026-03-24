@@ -65,4 +65,9 @@ public class Vector2 {
         vector.constMul(c);
         return vector;
     }
+
+    public static Vector2 normalize(Vector2 vector){
+        double n = vector.getNorm();
+        return Vector2.constMul(vector, 1/n);
+    }
 }
