@@ -26,8 +26,8 @@ public abstract class AstralBody {
         this.color = color;
     }
 
-    public void updateVelocity(Vector2 force, double deltaTime){
-        this.velocity.addVector(Vector2.constMul(force, deltaTime));
+    public void updateVelocity(Vector2 acc, double deltaTime){
+        this.velocity.addVector(Vector2.constMul(acc, deltaTime));
         updatePosition(velocity, deltaTime);
     }
 
