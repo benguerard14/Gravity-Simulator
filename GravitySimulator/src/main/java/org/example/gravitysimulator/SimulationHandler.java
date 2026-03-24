@@ -48,7 +48,7 @@ public class SimulationHandler {
         bodies.add(body);
         Circle circle = new Circle(body.getRadius());
 
-        bodiesInUI.add()
+        bodiesInUI.add(circle);
     }
 
     public void removeBody(AstralBody body) {
