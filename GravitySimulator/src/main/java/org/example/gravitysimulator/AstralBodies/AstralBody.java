@@ -35,8 +35,6 @@ public abstract class AstralBody {
         this.position.addVector(Vector2.constMul(velocity, deltaTime));
     }
 
-    public abstract void collide();
-
     public double getMass() {
         return mass;
     }

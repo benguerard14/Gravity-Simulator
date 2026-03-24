@@ -51,7 +51,7 @@ public class SimulationHandler {
     }
 
     public void removeBody(AstralBody body) {
-
+        bodies.remove(body);
     }
 
     public void setTimeScale(double timeScale) {
@@ -92,12 +92,28 @@ public class SimulationHandler {
 
 
         for(int i = 0; i < accArr.size(); i++){
-            bodies.get(i).updateVelocity(accArr.get(i), 0.067);
+            bodies.get(i).updateVelocity(accArr.get(i), deltaTime);
         }
     }
 
     public void checkCollisions() {
+        //MIGHT HAVE TO REDO -> Speed to fast and radius too small might cause planets to phase through each other
 
+        //MIGHT ALSO BE AN ISSUE NOT KNOWING WHEN IN BETWEEN PLANETS COLLIDED
+
+        for (int i = 0; i < bodies.size(); i++){
+            for(int j = 0; j < bodies.size(); j++){
+                if(i == j) continue;
+
+                AstralBody body1 = bodies.get(i);
+                AstralBody body2 = bodies.get(j);
+
+                double r = Vector2.subtractVector(body2.getPosition(), body1.getPosition()).getNorm();
+                if(r <= (body1.getRadius() + body2.getRadius())){
+                    resolveCollision(body1, body2);
+                }
+            }
+        }
     }
 
     public void resolveCollision(AstralBody body1, AstralBody body2) {
