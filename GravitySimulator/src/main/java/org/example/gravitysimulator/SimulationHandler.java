@@ -115,7 +115,7 @@ public class SimulationHandler {
 
     public void resolveCollision(AstralBody body1, AstralBody body2) {
 
-        if(body1 instanceof Star && body2 instanceof Star) {
+        if((body1 instanceof Star && body2 instanceof Star) || (body1 instanceof BlackHole && body2 instanceof BlackHole)) {
 
             Vector2 vF = new Vector2();
 
@@ -137,42 +137,72 @@ public class SimulationHandler {
         }
 
         else if(body1 instanceof Star && body2 instanceof BlackHole) {
+            Vector2 vF = new Vector2();
+
+            double bottomConstant = 1/(body1.getMass()+body2.getMass());
+
+            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+                    (Vector2.constMul(body2.getVelocity(),body2.getMass())))
+            ),bottomConstant));
+
+
+            body2.setVelocity(vF);
+            removeBody(body1);
 
 
         }
 
         else if(body1 instanceof BlackHole && body2 instanceof Star) {
+            Vector2 vF = new Vector2();
+
+            double bottomConstant = 1/(body1.getMass()+body2.getMass());
+
+            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+                    (Vector2.constMul(body2.getVelocity(),body2.getMass())))
+            ),bottomConstant));
 
 
-        }
-
-
-        else if(body1 instanceof BlackHole && body2 instanceof BlackHole) {
-            if(body1.getRadius() >= body2.getRadius()) {
-
-            }
-            else{
-
-            }
+            body1.setVelocity(vF);
+            removeBody(body2);
 
         }
 
         else if(body1 instanceof Star || body2 instanceof Star) {
-            if(body1.getRadius() >= body2.getRadius()) {
+            Vector2 vF = new Vector2();
 
+            double bottomConstant = 1/(body1.getMass()+body2.getMass());
+
+            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+                    (Vector2.constMul(body2.getVelocity(),body2.getMass())))
+            ),bottomConstant));
+
+            if(body1 instanceof Star) {
+                body1.setVelocity(vF);
+                removeBody(body2);
             }
             else{
-
+                body2.setVelocity(vF);
+                removeBody(body1);
             }
 
         }
 
         else if(body1 instanceof BlackHole || body2 instanceof BlackHole) {
-            if(body1.getRadius() >= body2.getRadius()) {
+            Vector2 vF = new Vector2();
 
+            double bottomConstant = 1/(body1.getMass()+body2.getMass());
+
+            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+                    (Vector2.constMul(body2.getVelocity(),body2.getMass())))
+            ),bottomConstant));
+
+            if(body1 instanceof BlackHole) {
+                body1.setVelocity(vF);
+                removeBody(body2);
             }
             else{
-
+                body2.setVelocity(vF);
+                removeBody(body1);
             }
 
         }
