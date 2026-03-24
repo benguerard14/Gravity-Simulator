@@ -1,6 +1,7 @@
 package org.example.gravitysimulator;
 
 import org.example.gravitysimulator.AstralBodies.AstralBody;
+import org.example.gravitysimulator.AstralBodies.*;
 import org.example.gravitysimulator.Utility.*;
 
 import java.util.*;
@@ -98,6 +99,75 @@ public class SimulationHandler {
     }
 
     public void resolveCollision(AstralBody body1, AstralBody body2) {
+
+        if(body1 instanceof Star && body2 instanceof Star) {
+
+            Vector2 vF = new Vector2();
+
+            double bottomConstant = 1/(body1.getMass()+body2.getMass());
+
+            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+                    (Vector2.constMul(body2.getVelocity(),body2.getMass())))
+            ),bottomConstant));
+
+            if(body1.getRadius() <= body2.getRadius()) {
+                body1.setVelocity(vF);
+                removeBody(body2);
+            }
+            else{
+                body2.setVelocity(vF);
+                removeBody(body1);
+            }
+
+        }
+
+        else if(body1 instanceof Star && body2 instanceof BlackHole) {
+
+
+        }
+
+        else if(body1 instanceof BlackHole && body2 instanceof Star) {
+
+
+        }
+
+
+        else if(body1 instanceof BlackHole && body2 instanceof BlackHole) {
+            if(body1.getRadius() >= body2.getRadius()) {
+
+            }
+            else{
+
+            }
+
+        }
+
+        else if(body1 instanceof Star || body2 instanceof Star) {
+            if(body1.getRadius() >= body2.getRadius()) {
+
+            }
+            else{
+
+            }
+
+        }
+
+        else if(body1 instanceof BlackHole || body2 instanceof BlackHole) {
+            if(body1.getRadius() >= body2.getRadius()) {
+
+            }
+            else{
+
+            }
+
+        }
+
+        else{
+
+        }
+
+
+
 
     }
 
