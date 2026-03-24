@@ -28,7 +28,6 @@ public class SimulationHandler {
     }
 
     public void start() {
-
     }
 
     public void close() {
@@ -98,8 +97,29 @@ public class SimulationHandler {
     }
 
     public void simulation() {
-
+        long previousTime = System.currentTimeMillis();
+        scheduler.scheduleAtFixedRate(new SimulationTask(previousTime),0l,(long)(1/updateRatePerSecond),TimeUnit.SECONDS);
     }
+}
 
-    
+class SimulationTask extends Thread implements Runnable {
+    private long previousTime;
+    public SimulationTask(long previousTime) {
+        this.previousTime = previousTime;
+    }
+    @Override
+    public void run() {
+        //Checking if alive
+        if(!isAlive()) {
+            return;
+        }
+
+        //Calculate real delta time in seconds
+        long currentTime = System.currentTimeMillis();
+        long delatTime = (currentTime - previousTime)/1000;
+        previousTime = currentTime;
+
+        //Scaling time
+        delatTime = delatTime*
+    }
 }
