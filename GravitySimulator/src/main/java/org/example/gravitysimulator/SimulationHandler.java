@@ -44,7 +44,7 @@ public class SimulationHandler {
     }
 
     public void addBody(AstralBody body) {
-
+        bodies.add(body);
     }
 
     public void removeBody(AstralBody body) {
@@ -60,29 +60,37 @@ public class SimulationHandler {
     }
 
     //Need to patch errors related to data types
-    public void calculateForces(double deltaTime) {
-        for( int i = 0; i < bodies.size(); i++ ) {
-            Vector2 forceNet;
-            for( int j = 0; j < bodies.size(); j++ ) {
+    public void calculateAcc(double deltaTime) {
+        List<Vector2> accArr = new ArrayList<>();
+        for(int i = 0; i < bodies.size(); i++ ) {
+            AstralBody body1 = bodies.get(i);
+
+            Vector2 accNet = new Vector2();
+            for(int j = 0; j < bodies.size(); j++ ) {
                 if(i==j) continue;
 
-                double ri; //to do
+                AstralBody body2 = bodies.get(j);
 
-                forceNet += (GRAVITATIONALCONSTANT*(bodies.get(j).getMass())*
-                        (substractVector(bodies.get(j).getPosition(),bodies.get(i).getPosition())))/
-                        (ri*ri*ri)
+                double ri = 0;
+                Vector2 r_unit = new Vector2();
 
+                Vector2 r = Vector2.subtractVector(body2.getPosition(), body1.getPosition());
+                ri = r.getNorm();
+                r_unit = Vector2.constMul(r, 1/ri);
+
+                double accConstant = (GRAVITATIONALCONSTANT * body2.getMass())/(Math.pow(ri + 0.00001, 2));
+
+                accNet.addVector(Vector2.constMul(r_unit, accConstant));
 
             }
+
+            accArr.add(i, accNet);
         }
-    }
 
-    public void calculateVelocities(double deltaTime) {
 
-    }
-
-    public void calculatePositions(double deltaTime) {
-
+        for(int i = 0; i < accArr.size(); i++){
+            bodies.get(i).updateVelocity(accArr.get(i), 0.067);
+        }
     }
 
     public void checkCollisions() {
