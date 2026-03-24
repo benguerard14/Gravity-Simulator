@@ -89,7 +89,7 @@ public class SimulationHandler {
 
 
         for(int i = 0; i < accArr.size(); i++){
-            bodies.get(i).updateVelocity(accArr.get(i), 0.067);
+            bodies.get(i).updateVelocity(accArr.get(i), deltaTime);
         }
     }
 
