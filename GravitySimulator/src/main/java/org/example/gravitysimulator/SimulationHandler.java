@@ -9,6 +9,7 @@ import java.util.concurrent.*;
 public class SimulationHandler {
     //Variables
     ArrayList<AstralBody> bodies = new ArrayList<>();
+    ArrayList<Circle> bodiesInUI = new ArrayList<>();
     private static double GRAVITATIONALCONSTANT = 6.6743 * Math.pow(10,-11);
     ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
     private double updateRatePerSecond = 60;
@@ -44,6 +45,9 @@ public class SimulationHandler {
 
     public void addBody(AstralBody body) {
         bodies.add(body);
+        Circle circle = new Circle(body.getRadius());
+
+        bodiesInUI.add()
     }
 
     public void removeBody(AstralBody body) {
@@ -106,14 +110,35 @@ public class SimulationHandler {
 
     public void simulation() {
         long previousTime = System.currentTimeMillis();
-        scheduler.scheduleAtFixedRate(new SimulationTask(previousTime),0l,(long)(1/updateRatePerSecond),TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                //Calculate real delta time in seconds
+                long currentTime = System.currentTimeMillis();
+                long delatTime = (currentTime - previousTime)/1000;
+                previousTime = currentTime;
+
+                //Scaling time
+                delatTime = delatTime*timeScale;
+
+                //Calculations for force/acceleration velocity and displacement
+
+
+                //Updating
+
+
+            }
+        }, 0, (1 / updateRatePerSecond), TimeUnit.SECONDS);
     }
 }
 
+/*
 class SimulationTask extends Thread implements Runnable {
     private long previousTime;
-    public SimulationTask(long previousTime) {
+    private double timeScale;
+    public SimulationTask(long previousTime, double timeScale) {
         this.previousTime = previousTime;
+        this.timeScale = timeScale;
     }
     @Override
     public void run() {
@@ -128,6 +153,8 @@ class SimulationTask extends Thread implements Runnable {
         previousTime = currentTime;
 
         //Scaling time
-        delatTime = delatTime*
+        delatTime = delatTime*timeScale;
+
+
     }
 }
