@@ -30,12 +30,15 @@ public class SimulationHandler {
         this.timeScale = timeScale;
     }
 
+    /*
     public void start() {
     }
 
     public void close() {
 
     }
+
+     */
 
     public void pause() {
 
@@ -220,37 +223,26 @@ public class SimulationHandler {
 
     }
 
+    /*
     public void simulation() {
         long previousTime = System.currentTimeMillis();
-        scheduler.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                //Calculate real delta time in seconds
-                long currentTime = System.currentTimeMillis();
-                long delatTime = (currentTime - previousTime)/1000;
-                previousTime = currentTime;
-
-                //Scaling time
-                delatTime = delatTime*timeScale;
-
-                //Calculations for force/acceleration velocity and displacement
-
-
-                //Updating
-
-
-            }
-        }, 0, (1 / updateRatePerSecond), TimeUnit.SECONDS);
+        //scheduler.scheduleAtFixedRate(new SimulationTask(previousTime, timeScale, bodies, bodiesInUI), 0, (long)(1 / updateRatePerSecond), TimeUnit.SECONDS);
     }
+    
+     */
 }
 
 /*
 class SimulationTask extends Thread implements Runnable {
     private long previousTime;
     private double timeScale;
-    public SimulationTask(long previousTime, double timeScale) {
+    private ArrayList<AstralBody> bodies;
+    private ArrayList<Circle> bodiesInUI;
+    public SimulationTask(long previousTime, double timeScale, ArrayList<AstralBody> bodies, ArrayList<Circle> bodiesInUI) {
         this.previousTime = previousTime;
         this.timeScale = timeScale;
+        this.bodies = bodies;
+        this.bodiesInUI = bodiesInUI;
     }
     @Override
     public void run() {
@@ -261,12 +253,15 @@ class SimulationTask extends Thread implements Runnable {
 
         //Calculate real delta time in seconds
         long currentTime = System.currentTimeMillis();
-        long delatTime = (currentTime - previousTime)/1000;
+        double deltaTime = (currentTime - previousTime)/1000;
         previousTime = currentTime;
 
         //Scaling time
-        delatTime = delatTime*timeScale;
+        deltaTime = deltaTime*timeScale;
 
+        //Calculate acceleration
 
     }
-}
+ }
+ */
+
