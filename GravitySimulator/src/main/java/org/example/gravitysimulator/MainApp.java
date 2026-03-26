@@ -55,7 +55,7 @@ public class MainApp extends Application {
         addDot(dotsPane, Color.rgb(180, 100, 180), 120, 160);   // purple top-left
         addDot(dotsPane, Color.rgb(220, 160,  60), 680, 140);   // orange top-right
         addDot(dotsPane, Color.rgb( 80, 180,  80), 140, 440);   // green bottom-left
-        addDot(dotsPane, Color.rgb(220, 160,  60), 660, 380);   // orange right
+
         dotsPane.setMouseTransparent(true);
 
         StackPane finalPane = new StackPane(stack, dotsPane);
@@ -64,7 +64,6 @@ public class MainApp extends Application {
         Scene scene = new Scene(finalPane, 800, 600);
         stage.setTitle("Gravity Simulator");
         stage.setScene(scene);
-        stage.setFullScreen(true);
         stage.setFullScreenExitHint("");
         stage.show();
 
