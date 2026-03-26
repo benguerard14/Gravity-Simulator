@@ -65,7 +65,7 @@ public class SimulationHandler {
     }
 
     //Need to patch errors related to data types
-    public void calculateAcc(double deltaTime) {
+    public void updatePositions(double deltaTime) {
         List<Vector2> accArr = new ArrayList<>();
         for(int i = 0; i < bodies.size(); i++ ) {
             AstralBody body1 = bodies.get(i);

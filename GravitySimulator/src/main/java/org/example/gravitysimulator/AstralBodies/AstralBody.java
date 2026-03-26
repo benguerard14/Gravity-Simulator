@@ -27,12 +27,12 @@ public abstract class AstralBody {
     }
 
     public void updateVelocity(Vector2 acc, double deltaTime){
-        this.velocity.addVector(Vector2.constMul(acc, deltaTime));
+        this.velocity = this.velocity.addVector(Vector2.constMul(acc, deltaTime));
         updatePosition(velocity, deltaTime);
     }
 
     public void updatePosition(Vector2 velocity, double deltaTime){
-        this.position.addVector(Vector2.constMul(velocity, deltaTime));
+        this.position = this.position.addVector(Vector2.constMul(velocity, deltaTime));
     }
 
     public double getMass() {
