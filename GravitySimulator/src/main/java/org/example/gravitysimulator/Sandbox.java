@@ -23,7 +23,7 @@ public class Sandbox {
 
     public static Scene createScene(Stage stage) {
 
-        // --- Top-left buttons (Planet, Star, Asteroid) ---
+        //Top-left buttons (Planet, Star, Asteroid)
         Button planetBtn   = createTypeButton("Planet");
         Button starBtn     = createTypeButton("Star");
         Button asteroidBtn = createTypeButton("Asteroid");
@@ -31,7 +31,7 @@ public class Sandbox {
         starBtn.setStyle(
                 "-fx-background-color: white; -fx-text-fill: black;" +
                         "-fx-border-color: white; -fx-border-width: 1.5; -fx-cursor: hand;"
-        ); // Star selected by default
+        );
 
         VBox typeButtons = new VBox(6, planetBtn, starBtn, asteroidBtn);
         typeButtons.setPadding(new Insets(10));
