@@ -13,8 +13,6 @@ public class SimulationHandler {
     ArrayList<AstralBody> bodies = new ArrayList<>();
     ArrayList<Circle> bodiesInUI = new ArrayList<>();
     private static final double GRAVITATIONALCONSTANT = 6.6743 * Math.pow(10,-11);
-    ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
-    private double updateRatePerSecond = 60;
     private boolean isRunning = false;
     private double timeScale = 1;
     private MainApp GUI;
@@ -26,26 +24,7 @@ public class SimulationHandler {
 
     public SimulationHandler(MainApp GUI, double updateRatePerSecond, double timeScale) {
         this.GUI = GUI;
-        this.updateRatePerSecond = updateRatePerSecond;
         this.timeScale = timeScale;
-    }
-
-    /*
-    public void start() {
-    }
-
-    public void close() {
-
-    }
-
-     */
-
-    public void pause() {
-
-    }
-
-    public void resume() {
-
     }
 
     public void addBody(AstralBody body) {
@@ -224,45 +203,5 @@ public class SimulationHandler {
 
     }
 
-    /*
-    public void simulation() {
-        long previousTime = System.currentTimeMillis();
-        //scheduler.scheduleAtFixedRate(new SimulationTask(previousTime, timeScale, bodies, bodiesInUI), 0, (long)(1 / updateRatePerSecond), TimeUnit.SECONDS);
-    }
-    
-     */
 }
-
-/*
-class SimulationTask extends Thread implements Runnable {
-    private long previousTime;
-    private double timeScale;
-    private ArrayList<AstralBody> bodies;
-    private ArrayList<Circle> bodiesInUI;
-    public SimulationTask(long previousTime, double timeScale, ArrayList<AstralBody> bodies, ArrayList<Circle> bodiesInUI) {
-        this.previousTime = previousTime;
-        this.timeScale = timeScale;
-        this.bodies = bodies;
-        this.bodiesInUI = bodiesInUI;
-    }
-    @Override
-    public void run() {
-        //Checking if alive
-        if(!isAlive()) {
-            return;
-        }
-
-        //Calculate real delta time in seconds
-        long currentTime = System.currentTimeMillis();
-        double deltaTime = (currentTime - previousTime)/1000;
-        previousTime = currentTime;
-
-        //Scaling time
-        deltaTime = deltaTime*timeScale;
-
-        //Calculate acceleration
-
-    }
- }
- */
 
