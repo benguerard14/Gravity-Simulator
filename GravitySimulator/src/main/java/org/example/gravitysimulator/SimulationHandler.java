@@ -30,12 +30,15 @@ public class SimulationHandler {
         this.timeScale = timeScale;
     }
 
+    /*
     public void start() {
     }
 
     public void close() {
 
     }
+
+     */
 
     public void pause() {
 
@@ -220,10 +223,13 @@ public class SimulationHandler {
 
     }
 
+    /*
     public void simulation() {
         long previousTime = System.currentTimeMillis();
         //scheduler.scheduleAtFixedRate(new SimulationTask(previousTime, timeScale, bodies, bodiesInUI), 0, (long)(1 / updateRatePerSecond), TimeUnit.SECONDS);
     }
+    
+     */
 }
 
 /*
