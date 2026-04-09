@@ -191,7 +191,66 @@ public class SimulationHandler {
         }
 
         else{
+            double totalMass = body1.getMass() + body2.getMass();
 
+            Vector2 totalMomentum = Vector2.addVector(
+                    Vector2.directConstMul(body1.getVelocity(), body1.getMass()),
+                    Vector2.directConstMul(body2.getVelocity(), body2.getMass()));
+
+            double massDebris = totalMass * (0.03 + Math.random()*0.05);
+            double massLeft = totalMass-massDebris;
+
+            Vector2 avgVelocity = Vector2.directConstMul(
+                    Vector2.addVector(body1.getVelocity(), body2.getVelocity()),0.5);
+
+            double baseDebrisSpeed = avgVelocity.getNorm();
+            double baseDebrisRadius = (body1.getRadius() + body2.getRadius())/2;
+
+            //center of mass
+            Vector2 center = Vector2.directConstMul(
+                    Vector2.addVector(
+                            Vector2.directConstMul(body1.getPosition(), body1.getMass()),
+                            Vector2.directConstMul(body2.getPosition(), body2.getMass())), 1.0/totalMass);
+
+            Vector2 debrisMomentumSum = new Vector2();
+
+            int n = (int)(Math.random()*5 + 5);
+
+            double mergedRadius = Math.max(body1.getRadius(), body2.getRadius()) * (1.02 + 0.03*Math.random());
+
+            for(int i=0;i<n;i++){
+                double iMass = massDebris/n;
+
+                double angle = Math.random() * 2*Math.PI;
+                Vector2 direction = new Vector2(Math.cos(angle), Math.sin(angle));
+
+                double speed = baseDebrisSpeed * (0.5 + Math.random());
+
+                Vector2 iVelocity = Vector2.directConstMul(direction, speed);
+                Vector2 iMomentum = Vector2.directConstMul(iVelocity, iMass);
+
+                debrisMomentumSum = debrisMomentumSum.addVector(iMomentum);
+
+                double debrisRadius = baseDebrisRadius*(0.8 + 0.4*Math.random());
+
+                double margin = 2.0;
+                double spawnDistance = mergedRadius+debrisRadius+margin+Math.random()*5;
+
+                Vector2 position = Vector2.addVector(
+                        center,Vector2.directConstMul(direction, spawnDistance));
+
+                bodies.add(new Asteroid(iMass,debrisRadius,iVelocity,position,body1.getColor()));
+            }
+
+            Vector2 vF = Vector2.directConstMul(
+                    totalMomentum.subtractVector(debrisMomentumSum),1.0/massLeft);
+
+            body1.setMass(massLeft);
+            body1.setVelocity(vF);
+            body1.setRadius(mergedRadius);
+            body1.setPosition(center);
+
+            removeBody(body2);
         }
 
 

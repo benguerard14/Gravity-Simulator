@@ -44,6 +44,10 @@ public class Vector2 {
         this.y *= c;
     }
 
+    public static Vector2 directConstMul(Vector2 vector, double c){
+        return new Vector2(vector.x * c, vector.y * c);
+    }
+
     public double getNorm() {
         return Math.sqrt((x*x)+(y*y));
     }
