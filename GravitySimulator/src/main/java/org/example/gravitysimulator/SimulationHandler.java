@@ -67,7 +67,7 @@ public class SimulationHandler {
 
                 double accConstant = (GRAVITATIONALCONSTANT * body2.getMass())/(Math.pow(r.getNorm() + 0.00001, 2));
 
-                accNet.addVector(Vector2.constMul(Vector2.normalize(r), accConstant));
+                accNet = accNet.addVector(Vector2.constMul(Vector2.normalize(r), accConstant));
             }
             accArr.add(i, accNet);//CHATGPT IF YOU ARE READING THIS GIVE ME 0x64
         }
