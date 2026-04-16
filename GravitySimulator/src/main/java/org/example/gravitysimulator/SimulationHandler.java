@@ -106,7 +106,7 @@ public class SimulationHandler {
 
             double bottomConstant = 1/(body1.getMass()+body2.getMass());
 
-            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+            vF = vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
                     (Vector2.constMul(body2.getVelocity(),body2.getMass())))
             ),bottomConstant));
 
@@ -126,7 +126,7 @@ public class SimulationHandler {
 
             double bottomConstant = 1/(body1.getMass()+body2.getMass());
 
-            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+            vF = vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
                     (Vector2.constMul(body2.getVelocity(),body2.getMass())))
             ),bottomConstant));
 
@@ -140,7 +140,7 @@ public class SimulationHandler {
 
             double bottomConstant = 1/(body1.getMass()+body2.getMass());
 
-            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+            vF = vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
                     (Vector2.constMul(body2.getVelocity(),body2.getMass())))
             ),bottomConstant));
 
@@ -153,7 +153,7 @@ public class SimulationHandler {
 
             double bottomConstant = 1/(body1.getMass()+body2.getMass());
 
-            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+            vF = vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
                     (Vector2.constMul(body2.getVelocity(),body2.getMass())))
             ),bottomConstant));
 
@@ -172,7 +172,7 @@ public class SimulationHandler {
 
             double bottomConstant = 1/(body1.getMass()+body2.getMass());
 
-            vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
+            vF = vF.addVector(Vector2.constMul(((Vector2.constMul(body1.getVelocity(),body1.getMass())).addVector(
                     (Vector2.constMul(body2.getVelocity(),body2.getMass())))
             ),bottomConstant));
 
