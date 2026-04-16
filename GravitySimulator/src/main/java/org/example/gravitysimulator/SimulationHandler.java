@@ -27,6 +27,11 @@ public class SimulationHandler {
         this.timeScale = timeScale;
     }
 
+    public ArrayList<AstralBody> getBodies()
+    {
+        return this.bodies;
+    }
+
     public void addBody(AstralBody body) {
         bodies.add(body);
         Circle circle = new Circle(body.getRadius());
@@ -239,7 +244,7 @@ public class SimulationHandler {
                 Vector2 position = Vector2.addVector(
                         center,Vector2.directConstMul(direction, spawnDistance));
 
-                bodies.add(new Asteroid(iMass,debrisRadius,iVelocity,position,body1.getColor()));
+                bodies.add(new Asteroid(iMass,debrisRadius,iVelocity,position));
             }
 
             Vector2 vF = Vector2.directConstMul(
