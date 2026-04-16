@@ -7,7 +7,5 @@ public class BlackHole extends AstralBody {
         super(mass, radius, velocity, position, color);
     }
 
-    public void collide(){
-        //todo
-    }
+    
 }

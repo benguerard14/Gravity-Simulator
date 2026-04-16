@@ -9,10 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -119,6 +116,10 @@ public class Sandbox {
                 "-fx-background-color: #1a1a1a;" +
                         "-fx-border-color: #555; -fx-border-width: 1 0 0 0;"
         );
+
+
+
+
 
         // --- Root layout ---
         BorderPane root = new BorderPane();
