@@ -14,11 +14,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import org.example.gravitysimulator.AstralBodies.Asteroid;
+import org.example.gravitysimulator.AstralBodies.AstralBody;
+import org.example.gravitysimulator.AstralBodies.Planet;
+import org.example.gravitysimulator.AstralBodies.Star;
+import org.example.gravitysimulator.Utility.Vector2;
+
 import java.util.Random;
+
+
 public class Sandbox {
 
-
-    public static Scene createScene(Stage stage) {
+    public static Scene createScene(Stage stage, SimulationHandler handler) {
 
         //Top-left buttons (Planet, Star, Asteroid)
         Button planetBtn   = createTypeButton("Planet");
@@ -29,6 +36,7 @@ public class Sandbox {
                 "-fx-background-color: white; -fx-text-fill: black;" +
                         "-fx-border-color: white; -fx-border-width: 1.5; -fx-cursor: hand;"
         );
+
 
         VBox typeButtons = new VBox(6, planetBtn, starBtn, asteroidBtn);
         typeButtons.setPadding(new Insets(10));
@@ -110,6 +118,19 @@ public class Sandbox {
         );
         row2.setAlignment(Pos.CENTER_LEFT);
 
+
+        final String[] selectedType = {"Planet"}; // Track which button is "active"
+
+        planetBtn.setOnAction(e -> selectedType[0] = "Planet");
+        starBtn.setOnAction(e -> selectedType[0] = "Star");
+        asteroidBtn.setOnAction(e -> selectedType[0] = "Asteroid");
+
+        launchBtn.setOnAction(e -> {
+            handleLaunch(selectedType[0], handler, canvas,
+                    massField, radiusField, velocityField,
+                    tempField, angleSlider);
+        });
+
         VBox controlPanel = new VBox(8, row1, row2);
         controlPanel.setPadding(new Insets(12, 16, 12, 16));
         controlPanel.setStyle(
@@ -126,6 +147,48 @@ public class Sandbox {
         root.setStyle("-fx-background-color: black;");
         root.setCenter(spaceArea);
         root.setBottom(controlPanel);
+
+        // This is the "Glue" that connects the Math to the Pixels
+        new javafx.animation.AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                // 1. Tell the Backend to calculate the next step of physics
+                // We use a fixed deltaTime (0.016s) for stability
+                handler.updatePositions(0.016);
+                handler.checkCollisions();
+
+                // 2. Prepare the Canvas for drawing
+                GraphicsContext gc = canvas.getGraphicsContext2D();
+
+                // 3. Clear the previous frame (otherwise planets leave "trails")
+                gc.setFill(Color.BLACK);
+                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+                // 4. Redraw the background stars
+                drawStars(gc, canvas.getWidth(), canvas.getHeight());
+
+                // 5. Draw the current state of every AstralBody
+                for (AstralBody body : handler.getBodies()) {
+                    // Get color from the backend array
+                    int[] rgb = body.getColor();
+                    gc.setFill(Color.rgb(rgb[0], rgb[1], rgb[2]));
+
+                    double r = body.getRadius();
+                    Vector2 pos = body.getPosition();
+
+                    // Draw the body!
+                    // We subtract the radius from X and Y because
+                    // fillOval starts drawing from the top-left corner,
+                    // but our Vector2 is the center of the planet.
+                    gc.fillOval(
+                            pos.getX() - r,
+                            pos.getY() - r,
+                            r * 2,
+                            r * 2
+                    );
+                }
+            }
+        }.start(); // Don't forget to start the timer!
 
         return new Scene(root, 800, 600);
     }
@@ -174,6 +237,42 @@ public class Sandbox {
             double y = rand.nextDouble() * h;
             double r = rand.nextDouble() * 1.8 + 0.3;
             gc.fillOval(x, y, r, r);
+        }
+    }
+
+    private static void handleLaunch(String type, SimulationHandler handler, Canvas canvas,
+                                     TextField mField, TextField rField, TextField vField,
+                                     TextField tField, Slider aSlider) {
+        try {
+            // 1. Parse Data
+            double mass = Double.parseDouble(mField.getText());
+            double radius = Double.parseDouble(rField.getText());
+            double velocityMag = Double.parseDouble(vField.getText());
+            double temperature = Double.parseDouble(tField.getText());
+            double angleDeg = aSlider.getValue();
+
+            // 2. Convert Angle + Magnitude to Vector2
+            double rads = Math.toRadians(angleDeg);
+            Vector2 velocity = new Vector2(velocityMag * Math.cos(rads), velocityMag * Math.sin(rads));
+
+            // Spawn at center of canvas
+            Vector2 position = new Vector2(canvas.getWidth() / 2, canvas.getHeight() / 2);
+
+            // 3. Create concrete object based on selection
+            AstralBody body;
+            switch (type) {
+                case "Star":     body = new Star(mass, radius, velocity, position); break;
+                case "Asteroid": body = new Asteroid(mass, radius, velocity, position); break;
+                default:         body = new Planet(mass, radius, velocity, position); break;
+            }
+
+            body.setTemperature(temperature);
+
+            // 4. Send to backend
+            handler.addBody(body);
+
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid input: Please enter valid numbers.");
         }
     }
 }

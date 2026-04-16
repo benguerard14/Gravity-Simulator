@@ -29,7 +29,7 @@ public class MainMenu {
         Button exitBtn    = createMenuButton("Exit");
 
         exitBtn.setOnAction(e -> stage.close());
-        sandboxBtn.setOnAction(e -> stage.setScene(Sandbox.createScene(stage)));
+        sandboxBtn.setOnAction(e -> { SimulationHandler handler = new SimulationHandler(null);stage.setScene(Sandbox.createScene(stage, handler));});
 
         VBox menu = new VBox(20, title, sandboxBtn, tutorialBtn, exitBtn);
         menu.setAlignment(Pos.CENTER);
