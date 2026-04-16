@@ -268,7 +268,7 @@ public class Sandbox {
 
             body.setTemperature(temperature);
 
-            // 4. Send to backend
+
             handler.addBody(body);
 
         } catch (NumberFormatException e) {
