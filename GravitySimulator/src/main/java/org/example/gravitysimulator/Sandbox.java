@@ -11,6 +11,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
@@ -21,12 +22,14 @@ import org.example.gravitysimulator.AstralBodies.Star;
 import org.example.gravitysimulator.Utility.Vector2;
 
 import java.util.Random;
+import java.util.concurrent.*;
 
 
 public class Sandbox {
 
-    public static Scene createScene(Stage stage, SimulationHandler handler) {
+    static Pane spaceForPlanets = new Pane();
 
+    public static Scene createScene(Stage stage, SimulationHandler handler) {
         //Top-left buttons (Planet, Star, Asteroid)
         Button planetBtn   = createTypeButton("Planet");
         Button starBtn     = createTypeButton("Star");
@@ -64,7 +67,7 @@ public class Sandbox {
         topBar.setStyle("-fx-background-color: transparent;");
         BorderPane.setAlignment(helpBtn, Pos.TOP_RIGHT);
 
-        StackPane spaceArea = new StackPane(canvas, topBar);
+        StackPane spaceArea = new StackPane(spaceForPlanets, topBar);
         spaceArea.setStyle("-fx-background-color: black;");
         StackPane.setAlignment(topBar, Pos.TOP_LEFT);
 
@@ -148,6 +151,11 @@ public class Sandbox {
         root.setCenter(spaceArea);
         root.setBottom(controlPanel);
 
+        ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1);
+        SimulationTask task = new SimulationTask(System.currentTimeMillis(),handler);
+        scheduledExecutorService.scheduleAtFixedRate(task,0,16,TimeUnit.MILLISECONDS);
+
+        /*
         // This is the "Glue" that connects the Math to the Pixels
         new javafx.animation.AnimationTimer() {
             @Override
@@ -189,6 +197,8 @@ public class Sandbox {
                 }
             }
         }.start(); // Don't forget to start the timer!
+
+         */
 
         return new Scene(root, 800, 600);
     }
@@ -240,6 +250,7 @@ public class Sandbox {
         }
     }
 
+
     private static void handleLaunch(String type, SimulationHandler handler, Canvas canvas,
                                      TextField mField, TextField rField, TextField vField,
                                      TextField tField, Slider aSlider) {
@@ -258,6 +269,8 @@ public class Sandbox {
             // Spawn at center of canvas
             Vector2 position = new Vector2(canvas.getWidth() / 2, canvas.getHeight() / 2);
 
+
+
             // 3. Create concrete object based on selection
             AstralBody body;
             switch (type) {
@@ -267,13 +280,16 @@ public class Sandbox {
             }
 
             body.setTemperature(temperature);
-
-
-            handler.addBody(body);
-
+            Circle circle = new Circle(radius);
+            circle.setFill(Color.RED);
+            circle.setLayoutX(position.getX());
+            circle.setLayoutY(position.getY());
+            handler.addBody(body, circle);
+            spaceForPlanets.getChildren().add(circle);
         } catch (NumberFormatException e) {
             System.err.println("Invalid input: Please enter valid numbers.");
         }
     }
+
 }
 

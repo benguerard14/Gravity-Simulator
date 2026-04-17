@@ -20,7 +20,7 @@ public class SimulationTask implements Runnable {
     public void run() {
         //Calculate real delta time in seconds
         long currentTime = System.currentTimeMillis();
-        double deltaTime = (currentTime - previousTime)/1000;
+        double deltaTime = (currentTime - previousTime)/1000.0;
         previousTime = currentTime;
 
         //Scaling time

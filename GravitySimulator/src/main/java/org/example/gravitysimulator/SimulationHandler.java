@@ -14,7 +14,7 @@ public class SimulationHandler {
     ArrayList<Circle> bodiesInUI = new ArrayList<>();
     private static final double GRAVITATIONALCONSTANT = 6.6743 * Math.pow(10,-11);
     private boolean isRunning = false;
-    private double timeScale = 1;
+    private double timeScale = 20;
     private MainApp GUI;
 
     //Constructors
@@ -32,10 +32,8 @@ public class SimulationHandler {
         return this.bodies;
     }
 
-    public void addBody(AstralBody body) {
+    public void addBody(AstralBody body, Circle circle) {
         bodies.add(body);
-        Circle circle = new Circle(body.getRadius());
-
         bodiesInUI.add(circle);
     }
 
@@ -92,7 +90,7 @@ public class SimulationHandler {
 
                 double r = Vector2.subtractVector(body2.getPosition(), body1.getPosition()).getNorm();
                 if(r <= (body1.getRadius() + body2.getRadius())){
-                    resolveCollision(body1, body2);
+                    //resolveCollision(body1, body2);
                 }
             }
         }
