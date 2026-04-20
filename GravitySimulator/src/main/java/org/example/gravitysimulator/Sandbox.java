@@ -24,13 +24,14 @@ import org.example.gravitysimulator.Utility.Vector2;
 import java.util.Random;
 import java.util.concurrent.*;
 
-
 public class Sandbox {
 
-    static Pane spaceForPlanets = new Pane();
+    // Public so SimulationHandler can remove circles from the scene
+    public static Pane spaceForPlanets = new Pane();
 
     public static Scene createScene(Stage stage, SimulationHandler handler) {
-        //Top-left buttons (Planet, Star, Asteroid)
+
+        // Top-left buttons (Planet, Star, Asteroid)
         Button planetBtn   = createTypeButton("Planet");
         Button starBtn     = createTypeButton("Star");
         Button asteroidBtn = createTypeButton("Asteroid");
@@ -40,12 +41,11 @@ public class Sandbox {
                         "-fx-border-color: white; -fx-border-width: 1.5; -fx-cursor: hand;"
         );
 
-
         VBox typeButtons = new VBox(6, planetBtn, starBtn, asteroidBtn);
         typeButtons.setPadding(new Insets(10));
         typeButtons.setAlignment(Pos.TOP_LEFT);
 
-        // --- Help button (top-right) ---
+        // Help button (top-right)
         Button helpBtn = new Button("?");
         helpBtn.setPrefSize(30, 30);
         helpBtn.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -54,20 +54,20 @@ public class Sandbox {
                         "-fx-border-radius: 50; -fx-background-radius: 50; -fx-cursor: hand;"
         );
 
-        // --- Star canvas (black space area) ---
+        // Star canvas (black space background)
         Canvas canvas = new Canvas();
-        canvas.setStyle("-fx-background-color: black;");
         drawStars(canvas.getGraphicsContext2D(), 800, 560);
 
-        // Layout: type buttons top-left, help top-right, over canvas
+        // Overlay: canvas → planet pane → top bar
         BorderPane topBar = new BorderPane();
         topBar.setLeft(typeButtons);
-        topBar.setRight(new javafx.scene.layout.HBox(helpBtn));
+        topBar.setRight(new HBox(helpBtn));
         topBar.setPadding(new Insets(6));
         topBar.setStyle("-fx-background-color: transparent;");
         BorderPane.setAlignment(helpBtn, Pos.TOP_RIGHT);
 
-        StackPane spaceArea = new StackPane(spaceForPlanets, topBar);
+        // Canvas must be in the stack so it fills the space area
+        StackPane spaceArea = new StackPane(canvas, spaceForPlanets, topBar);
         spaceArea.setStyle("-fx-background-color: black;");
         StackPane.setAlignment(topBar, Pos.TOP_LEFT);
 
@@ -78,22 +78,22 @@ public class Sandbox {
         canvas.heightProperty().addListener(o ->
                 drawStars(canvas.getGraphicsContext2D(), canvas.getWidth(), canvas.getHeight()));
 
-        // --- Bottom control panel ---
-        Label tempLabel = createLabel("Temperature:");
+        // Bottom control panel
+        Label  tempLabel    = createLabel("Temperature:");
         TextField tempField = createField(60);
 
-        Label radiusLabel = createLabel("Radius:");
+        Label  radiusLabel    = createLabel("Radius:");
         TextField radiusField = createField(60);
 
-        Label velocityLabel = createLabel("Velocity:");
+        Label  velocityLabel    = createLabel("Velocity:");
         TextField velocityField = createField(60);
 
-        Label massLabel = createLabel("Mass:");
+        Label  massLabel    = createLabel("Mass:");
         TextField massField = createField(60);
 
-        Label angleLabel = createLabel("Angle:");
+        Label  angleLabel    = createLabel("Angle:");
         TextField angleField = createField(40);
-        Slider angleSlider = new Slider(0, 360, 180);
+        Slider angleSlider   = new Slider(0, 360, 180);
         angleSlider.setPrefWidth(130);
         angleSlider.setStyle("-fx-control-inner-background: white;");
 
@@ -105,34 +105,28 @@ public class Sandbox {
                         "-fx-border-radius: 4; -fx-background-radius: 4; -fx-cursor: hand;"
         );
 
-        // Row 1: Temperature | Radius | Velocity | LAUNCH
         HBox row1 = new HBox(10,
                 tempLabel, tempField,
                 radiusLabel, radiusField,
                 velocityLabel, velocityField,
-                launchBtn
-        );
+                launchBtn);
         row1.setAlignment(Pos.CENTER_LEFT);
 
-        // Row 2: Mass | Angle + Slider
         HBox row2 = new HBox(10,
                 massLabel, massField,
-                angleLabel, angleField, angleSlider
-        );
+                angleLabel, angleField, angleSlider);
         row2.setAlignment(Pos.CENTER_LEFT);
 
-
-        final String[] selectedType = {"Planet"}; // Track which button is "active"
+        final String[] selectedType = {"Planet"};
 
         planetBtn.setOnAction(e -> selectedType[0] = "Planet");
         starBtn.setOnAction(e -> selectedType[0] = "Star");
         asteroidBtn.setOnAction(e -> selectedType[0] = "Asteroid");
 
-        launchBtn.setOnAction(e -> {
-            handleLaunch(selectedType[0], handler, canvas,
-                    massField, radiusField, velocityField,
-                    tempField, angleSlider);
-        });
+        launchBtn.setOnAction(e ->
+                handleLaunch(selectedType[0], handler, canvas,
+                        massField, radiusField, velocityField,
+                        tempField, angleSlider));
 
         VBox controlPanel = new VBox(8, row1, row2);
         controlPanel.setPadding(new Insets(12, 16, 12, 16));
@@ -141,64 +135,14 @@ public class Sandbox {
                         "-fx-border-color: #555; -fx-border-width: 1 0 0 0;"
         );
 
-
-
-
-
-        // --- Root layout ---
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: black;");
         root.setCenter(spaceArea);
         root.setBottom(controlPanel);
 
         ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1);
-        SimulationTask task = new SimulationTask(System.currentTimeMillis(),handler);
-        scheduledExecutorService.scheduleAtFixedRate(task,0,16,TimeUnit.MILLISECONDS);
-
-        /*
-        // This is the "Glue" that connects the Math to the Pixels
-        new javafx.animation.AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                // 1. Tell the Backend to calculate the next step of physics
-                // We use a fixed deltaTime (0.016s) for stability
-                handler.updatePositions(0.016);
-                handler.checkCollisions();
-
-                // 2. Prepare the Canvas for drawing
-                GraphicsContext gc = canvas.getGraphicsContext2D();
-
-                // 3. Clear the previous frame (otherwise planets leave "trails")
-                gc.setFill(Color.BLACK);
-                gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-                // 4. Redraw the background stars
-                drawStars(gc, canvas.getWidth(), canvas.getHeight());
-
-                // 5. Draw the current state of every AstralBody
-                for (AstralBody body : handler.getBodies()) {
-                    // Get color from the backend array
-                    int[] rgb = body.getColor();
-                    gc.setFill(Color.rgb(rgb[0], rgb[1], rgb[2]));
-
-                    double r = body.getRadius();
-                    Vector2 pos = body.getPosition();
-
-                    // Draw the body!
-                    // We subtract the radius from X and Y because
-                    // fillOval starts drawing from the top-left corner,
-                    // but our Vector2 is the center of the planet.
-                    gc.fillOval(
-                            pos.getX() - r,
-                            pos.getY() - r,
-                            r * 2,
-                            r * 2
-                    );
-                }
-            }
-        }.start(); // Don't forget to start the timer!
-
-         */
+        SimulationTask task = new SimulationTask(System.currentTimeMillis(), handler);
+        scheduledExecutorService.scheduleAtFixedRate(task, 0, 16, TimeUnit.MILLISECONDS);
 
         return new Scene(root, 800, 600);
     }
@@ -250,46 +194,39 @@ public class Sandbox {
         }
     }
 
-
     private static void handleLaunch(String type, SimulationHandler handler, Canvas canvas,
                                      TextField mField, TextField rField, TextField vField,
                                      TextField tField, Slider aSlider) {
         try {
-            // 1. Parse Data
-            double mass = Double.parseDouble(mField.getText());
-            double radius = Double.parseDouble(rField.getText());
+            double mass        = Double.parseDouble(mField.getText());
+            double radius      = Double.parseDouble(rField.getText());
             double velocityMag = Double.parseDouble(vField.getText());
             double temperature = Double.parseDouble(tField.getText());
-            double angleDeg = aSlider.getValue();
+            double angleDeg    = aSlider.getValue();
 
-            // 2. Convert Angle + Magnitude to Vector2
-            double rads = Math.toRadians(angleDeg);
+            double rads     = Math.toRadians(angleDeg);
             Vector2 velocity = new Vector2(velocityMag * Math.cos(rads), velocityMag * Math.sin(rads));
-
-            // Spawn at center of canvas
             Vector2 position = new Vector2(canvas.getWidth() / 2, canvas.getHeight() / 2);
 
-
-
-            // 3. Create concrete object based on selection
             AstralBody body;
             switch (type) {
-                case "Star":     body = new Star(mass, radius, velocity, position); break;
+                case "Star":     body = new Star(mass, radius, velocity, position);     break;
                 case "Asteroid": body = new Asteroid(mass, radius, velocity, position); break;
-                default:         body = new Planet(mass, radius, velocity, position); break;
+                default:         body = new Planet(mass, radius, velocity, position);   break;
             }
 
             body.setTemperature(temperature);
+
             Circle circle = new Circle(radius);
             circle.setFill(Color.RED);
             circle.setLayoutX(position.getX());
             circle.setLayoutY(position.getY());
+
             handler.addBody(body, circle);
             spaceForPlanets.getChildren().add(circle);
+
         } catch (NumberFormatException e) {
-            System.err.println("Invalid input: Please enter valid numbers.");
+            System.err.println("Invalid input: please enter valid numbers.");
         }
     }
-
 }
-
