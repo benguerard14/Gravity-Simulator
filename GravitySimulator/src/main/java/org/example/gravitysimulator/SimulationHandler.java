@@ -210,12 +210,16 @@ public class SimulationHandler {
             double  iMass     = massDebris / n;
             double  angle     = Math.random() * 2 * Math.PI;
             Vector2 dir       = new Vector2(Math.cos(angle), Math.sin(angle));
-            double  speed     = baseDebrisSpeed * (0.5 + Math.random());
+            double massFactor = Math.cbrt(totalMass);
+            double speed = baseDebrisSpeed * (1.5 + 0.00015 * massFactor * (1 + Math.random()*0.2));
+
+
+
             Vector2 iVelocity = Vector2.constMul(dir, speed);
 
             debrisMomentumSum = debrisMomentumSum.addVector(Vector2.constMul(iVelocity, iMass));
 
-            double  debrisRadius = baseDebrisRadius * (0.8 + 0.4 * Math.random());
+            double  debrisRadius = baseDebrisRadius * (0.2 + 0.4 * Math.random());
             double  spawnDist    = mergedRadius + debrisRadius + 2.0 + Math.random() * 5;
             Vector2 iPosition    = Vector2.addVector(center, Vector2.constMul(dir, spawnDist));
 
