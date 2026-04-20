@@ -157,7 +157,7 @@ public class SimulationHandler {
             AstralBody survivor = (body1.getRadius() >= body2.getRadius()) ? body1 : body2;
             AstralBody other    = (survivor == body1) ? body2 : body1;
             double newRadius = Math.cbrt(
-                    Math.pow(body1.getRadius(), 3) + Math.pow(body2.getRadius(), 3));
+                    Math.pow(body1.getRadius(), 2) + Math.pow(body2.getRadius(), 2));
             survivor.setMass(survivor.getMass() + other.getMass());
             survivor.setRadius(newRadius);
             survivor.setVelocity(mergedVelocity);
