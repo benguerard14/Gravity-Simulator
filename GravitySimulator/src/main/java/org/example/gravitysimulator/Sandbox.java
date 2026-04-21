@@ -220,7 +220,7 @@ public class Sandbox {
         tf.setPrefWidth(width);
         tf.setPrefHeight(24);
         tf.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ESCAPE || e.getCode() == KeyCode.ENTER) {
+            if (e.getCode() == KeyCode.ESCAPE || e.getCode() == KeyCode.ENTER || e.getCode() == KeyCode.A || e.getCode() == KeyCode.W || e.getCode() == KeyCode.S || e.getCode() == KeyCode.D) {
                 spaceForPlanets.requestFocus();
             }
         });
