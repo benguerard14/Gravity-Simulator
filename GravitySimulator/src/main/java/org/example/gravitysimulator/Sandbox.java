@@ -22,6 +22,7 @@ import org.example.gravitysimulator.AstralBodies.Planet;
 import org.example.gravitysimulator.AstralBodies.Star;
 import org.example.gravitysimulator.Utility.Vector2;
 
+import java.security.*;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -170,11 +171,6 @@ public class Sandbox {
         // Track when keys are released
         scene.setOnKeyReleased(e -> keyPressed.remove(e.getCode()));
 
-        //Defocus from textFields to scene
-        if (keyPressed.contains(KeyCode.ESCAPE) || keyPressed.contains(KeyCode.ENTER)) {
-            spaceForPlanets.setFocusTraversable(true);
-        }
-
         javafx.animation.AnimationTimer smoothTimer = new javafx.animation.AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -223,6 +219,11 @@ public class Sandbox {
         TextField tf = new TextField();
         tf.setPrefWidth(width);
         tf.setPrefHeight(24);
+        tf.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE || e.getCode() == KeyCode.ENTER) {
+                spaceForPlanets.requestFocus();
+            }
+        });
         tf.setStyle("-fx-background-color: #555; -fx-text-fill: white; -fx-border-color: #888;");
         return tf;
     }
@@ -252,15 +253,6 @@ public class Sandbox {
 
             double rads     = Math.toRadians(angleDeg);
             Vector2 velocity = new Vector2(velocityMag * Math.cos(rads), velocityMag * Math.sin(rads));
-            /*
-            double screenCenterX = canvas.getWidth() / 2;
-            double screenCenterY = canvas.getHeight() / 2;
-            // Calculate the center of the visible area relative to the moving pane
-            double centerX = (screenCenterX - spaceForPlanets.getTranslateX()) / currentScale;
-            double centerY = (screenCenterY - spaceForPlanets.getTranslateY()) / currentScale;
-            Vector2 position = new Vector2(centerX, centerY);
-
-             */
             double screenCenterX = canvas.getWidth() / 2;
             double screenCenterY = canvas.getHeight() / 2;
 
