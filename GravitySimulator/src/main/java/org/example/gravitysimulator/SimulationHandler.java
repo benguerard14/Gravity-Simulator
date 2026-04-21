@@ -64,7 +64,7 @@ public class SimulationHandler {
                 AstralBody body2 = bodies.get(j);
                 Vector2 r = Vector2.subtractVector(body2.getPosition(), body1.getPosition());
                 double accConstant = (GRAVITATIONALCONSTANT * body2.getMass())
-                        / Math.pow(r.getNorm() + 0.00001, 2);
+                        / Math.pow(r.getNorm() + 100, 2);
                 accNet = accNet.addVector(Vector2.constMul(Vector2.normalize(r), accConstant));
             }
             accArr.add(accNet);
