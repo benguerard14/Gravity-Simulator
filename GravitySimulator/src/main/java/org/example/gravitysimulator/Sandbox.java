@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -128,11 +129,26 @@ public class Sandbox {
         starBtn.setOnAction(e -> selectedType[0] = "Star");
         asteroidBtn.setOnAction(e -> selectedType[0] = "Asteroid");
 
+        //akjsdkjasdhkasjdjashkdjash
+        Button zoomPlusBtn = new Button("+");
+        zoomPlusBtn.setOnAction( e -> {
+            spaceForPlanets.setScaleX(spaceForPlanets.getScaleX()/0.5);
+            spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/0.5);
+        });
+        Button zoomMinusBtn = new Button("-");
+        zoomMinusBtn.setOnAction( e -> {
+            spaceForPlanets.setScaleX(spaceForPlanets.getScaleX()/2);
+            spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/2);
+        });
+        typeButtons.getChildren().addAll(zoomPlusBtn,zoomMinusBtn);
+
         launchBtn.setOnAction(e -> {
             handleLaunch(selectedType[0], handler, canvas,
                     massField, radiusField, velocityField,
                     tempField, angleSlider);
         });
+
+
 
         VBox controlPanel = new VBox(8, row1, row2);
         controlPanel.setPadding(new Insets(12, 16, 12, 16));
