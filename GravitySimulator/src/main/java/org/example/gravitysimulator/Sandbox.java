@@ -30,7 +30,6 @@ public class Sandbox {
     public static Pane spaceForPlanets = new Pane();
 
     public static Scene createScene(Stage stage, SimulationHandler handler) {
-
         // Top-left buttons (Planet, Star, Asteroid)
         Button planetBtn   = createTypeButton("Planet");
         Button starBtn     = createTypeButton("Star");
@@ -44,6 +43,19 @@ public class Sandbox {
         VBox typeButtons = new VBox(6, planetBtn, starBtn, asteroidBtn);
         typeButtons.setPadding(new Insets(10));
         typeButtons.setAlignment(Pos.TOP_LEFT);
+
+        //akjsdkjasdhkasjdjashkdjash
+        Button zoomPlusBtn = new Button("+");
+        zoomPlusBtn.setOnAction( e -> {
+            spaceForPlanets.setScaleX(spaceForPlanets.getScaleX()/0.5);
+            spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/0.5);
+        });
+        Button zoomMinusBtn = new Button("-");
+        zoomMinusBtn.setOnAction( e -> {
+            spaceForPlanets.setScaleX(spaceForPlanets.getScaleX()/2);
+            spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/2);
+        });
+        typeButtons.getChildren().addAll(zoomPlusBtn,zoomMinusBtn);
 
         // Help button (top-right)
         Button helpBtn = new Button("?");
