@@ -2,13 +2,14 @@ package org.example.gravitysimulator;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
+import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -21,15 +22,21 @@ import org.example.gravitysimulator.AstralBodies.Planet;
 import org.example.gravitysimulator.AstralBodies.Star;
 import org.example.gravitysimulator.Utility.Vector2;
 
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class Sandbox {
-
-    // Public so SimulationHandler can remove circles from the scene
     public static Pane spaceForPlanets = new Pane();
+    public static Group wrapperForMOVEMENT = new Group(spaceForPlanets);
+    public static HashSet<KeyCode> keyPressed = new HashSet<>();
+    public static double moveAmount = 5;
+    public static double currentScale = 1;
 
     public static Scene createScene(Stage stage, SimulationHandler handler) {
+        spaceForPlanets.setFocusTraversable(true);
+        BorderPane root = new BorderPane();
+        Scene scene = new Scene(root, 800, 600);
+
         // Top-left buttons (Planet, Star, Asteroid)
         Button planetBtn   = createTypeButton("Planet");
         Button starBtn     = createTypeButton("Star");
@@ -44,16 +51,18 @@ public class Sandbox {
         typeButtons.setPadding(new Insets(10));
         typeButtons.setAlignment(Pos.TOP_LEFT);
 
-        //akjsdkjasdhkasjdjashkdjash
+        //Zoom Buttons
         Button zoomPlusBtn = new Button("+");
         zoomPlusBtn.setOnAction( e -> {
             spaceForPlanets.setScaleX(spaceForPlanets.getScaleX()/0.5);
             spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/0.5);
+            currentScale = spaceForPlanets.getScaleX();
         });
         Button zoomMinusBtn = new Button("-");
         zoomMinusBtn.setOnAction( e -> {
             spaceForPlanets.setScaleX(spaceForPlanets.getScaleX()/2);
             spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/2);
+            currentScale = spaceForPlanets.getScaleX();
         });
         typeButtons.getChildren().addAll(zoomPlusBtn,zoomMinusBtn);
 
@@ -147,7 +156,6 @@ public class Sandbox {
                         "-fx-border-color: #555; -fx-border-width: 1 0 0 0;"
         );
 
-        BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: black;");
         root.setCenter(spaceArea);
         root.setBottom(controlPanel);
@@ -156,7 +164,33 @@ public class Sandbox {
         SimulationTask task = new SimulationTask(System.currentTimeMillis(), handler);
         scheduledExecutorService.scheduleAtFixedRate(task, 0, 16, TimeUnit.MILLISECONDS);
 
-        return new Scene(root, 800, 600);
+        // Track when keys are pressed
+        scene.setOnKeyPressed(e -> keyPressed.add(e.getCode()));
+
+        // Track when keys are released
+        scene.setOnKeyReleased(e -> keyPressed.remove(e.getCode()));
+
+        //Defocus from textFields to scene
+        if (keyPressed.contains(KeyCode.ESCAPE) || keyPressed.contains(KeyCode.ENTER)) {
+            spaceForPlanets.setFocusTraversable(true);
+        }
+
+        javafx.animation.AnimationTimer smoothTimer = new javafx.animation.AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                double adjustedSpeed = moveAmount;
+                if (keyPressed.contains(javafx.scene.input.KeyCode.W))
+                    spaceForPlanets.setTranslateY(spaceForPlanets.getTranslateY() + adjustedSpeed);
+                if (keyPressed.contains(javafx.scene.input.KeyCode.S))
+                    spaceForPlanets.setTranslateY(spaceForPlanets.getTranslateY() - adjustedSpeed);
+                if (keyPressed.contains(javafx.scene.input.KeyCode.A))
+                    spaceForPlanets.setTranslateX(spaceForPlanets.getTranslateX() + adjustedSpeed);
+                if (keyPressed.contains(javafx.scene.input.KeyCode.D))
+                    spaceForPlanets.setTranslateX(spaceForPlanets.getTranslateX() - adjustedSpeed);
+            }
+        };
+        smoothTimer.start();
+        return scene;
     }
 
     private static Button createTypeButton(String text) {
@@ -218,7 +252,22 @@ public class Sandbox {
 
             double rads     = Math.toRadians(angleDeg);
             Vector2 velocity = new Vector2(velocityMag * Math.cos(rads), velocityMag * Math.sin(rads));
-            Vector2 position = new Vector2(canvas.getWidth() / 2, canvas.getHeight() / 2);
+            /*
+            double screenCenterX = canvas.getWidth() / 2;
+            double screenCenterY = canvas.getHeight() / 2;
+            // Calculate the center of the visible area relative to the moving pane
+            double centerX = (screenCenterX - spaceForPlanets.getTranslateX()) / currentScale;
+            double centerY = (screenCenterY - spaceForPlanets.getTranslateY()) / currentScale;
+            Vector2 position = new Vector2(centerX, centerY);
+
+             */
+            double screenCenterX = canvas.getWidth() / 2;
+            double screenCenterY = canvas.getHeight() / 2;
+
+            // Convert screen-space center to spaceForPlanets local space
+            javafx.geometry.Point2D localPoint = spaceForPlanets.parentToLocal(screenCenterX, screenCenterY);
+
+            Vector2 position = new Vector2(localPoint.getX(), localPoint.getY());
 
             AstralBody body;
             switch (type) {
