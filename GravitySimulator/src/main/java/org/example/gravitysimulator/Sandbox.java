@@ -295,7 +295,7 @@ public class Sandbox {
             default: // Planet
                 massField.setText("5.97"); // Earth mass
                 radiusField.setText("15");
-                velocityField.setText("50");
+                velocityField.setText("8");
                 tempField.setText("288"); // Earth average
                 break;
         }
