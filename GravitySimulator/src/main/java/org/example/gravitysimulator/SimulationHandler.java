@@ -8,12 +8,16 @@ import org.example.gravitysimulator.Utility.*;
 
 import java.util.*;
 
+import static java.lang.Math.pow;
+
 public class SimulationHandler {
 
     ArrayList<AstralBody> bodies     = new ArrayList<>();
     ArrayList<Circle>     bodiesInUI = new ArrayList<>();
 
     private static final double GRAVITATIONALCONSTANT = 6.6743e-11;
+    private static final double DISTANCECONSTANT = pow(10, -14);
+    private static final double MASSCONSTANT = pow(10, 24);
 
     // How many ticks fresh debris is immune to collisions
     private static final int DEBRIS_IMMUNITY_TICKS = 10;
@@ -63,9 +67,9 @@ public class SimulationHandler {
                 if (i == j) continue;
                 AstralBody body2 = bodies.get(j);
                 Vector2 r = Vector2.subtractVector(body2.getPosition(), body1.getPosition());
-                double accConstant = (GRAVITATIONALCONSTANT * body2.getMass())
-                        / Math.pow(r.getNorm() + 100, 2);
-                accNet = accNet.addVector(Vector2.constMul(Vector2.normalize(r), accConstant));
+                double accConstant = (GRAVITATIONALCONSTANT * body2.getMass() * MASSCONSTANT)
+                        / pow(r.getNorm() + 100, 2);
+                accNet = accNet.addVector(Vector2.constMul(Vector2.normalize(r), accConstant * DISTANCECONSTANT));
             }
             accArr.add(accNet);
         }
@@ -157,7 +161,7 @@ public class SimulationHandler {
             AstralBody survivor = (body1.getRadius() >= body2.getRadius()) ? body1 : body2;
             AstralBody other    = (survivor == body1) ? body2 : body1;
             double newRadius = Math.cbrt(
-                    Math.pow(body1.getRadius(), 2) + Math.pow(body2.getRadius(), 2));
+                    pow(body1.getRadius(), 2) + pow(body2.getRadius(), 2));
             survivor.setMass(survivor.getMass() + other.getMass());
             survivor.setRadius(newRadius);
             survivor.setVelocity(mergedVelocity);
@@ -175,7 +179,7 @@ public class SimulationHandler {
             AstralBody planet   = (body1 instanceof Asteroid) ? body2 : body1;
             AstralBody asteroid = (planet == body1) ? body2 : body1;
             double newRadius = Math.cbrt(
-                    Math.pow(planet.getRadius(), 3) + Math.pow(asteroid.getRadius(), 3));
+                    pow(planet.getRadius(), 3) + pow(asteroid.getRadius(), 3));
             planet.setMass(planet.getMass() + asteroid.getMass());
             planet.setRadius(newRadius);
             planet.setVelocity(mergedVelocity);
