@@ -78,7 +78,6 @@ public class SimulationHandler {
             bodies.get(i).updateVelocity(accArr.get(i), deltaTime);
             bodies.get(i).updatePosition(deltaTime);
         }
-
         // Count down immunity on every physics step
         for (AstralBody body : bodies) {
             body.tickImmunity();
