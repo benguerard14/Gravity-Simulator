@@ -18,26 +18,30 @@ public class SimulationTask implements Runnable {
 
     @Override
     public void run() {
-        //Calculate real delta time in seconds
+        // Calculate real delta time in seconds
         long currentTime = System.currentTimeMillis();
-        double deltaTime = (currentTime - previousTime)/1000.0;
+        double deltaTime = (currentTime - previousTime) / 1000.0;
         previousTime = currentTime;
 
-        //Scaling time
-        deltaTime = deltaTime*handler.getTimeScale();
+        // Scale time
+        deltaTime = deltaTime * handler.getTimeScale();
 
-        //Calculate acceleration
+        // Physics step — also handles collision resolution and debris staging
         handler.updatePositions(deltaTime);
-
-        //Check Collisions
         handler.checkCollisions();
 
-        //Update to UI
+        // Snapshot the lists while still on the background thread so the
+        // sizes are consistent for the Platform.runLater closure.
+        final List<AstralBody> bodiesSnap = new ArrayList<>(handler.bodies);
+        final List<Circle>     circlesSnap = new ArrayList<>(handler.bodiesInUI);
+
         Platform.runLater(() -> {
-            for (int i = 0; i < handler.bodies.size(); i++) {
-                Vector2 positionV = handler.bodies.get(i).getPosition();
-                handler.bodiesInUI.get(i).setLayoutX(positionV.getX());
-                handler.bodiesInUI.get(i).setLayoutY(positionV.getY());
+            // Use the minimum of both lists as a safety guard
+            int count = Math.min(bodiesSnap.size(), circlesSnap.size());
+            for (int i = 0; i < count; i++) {
+                Vector2 pos = bodiesSnap.get(i).getPosition();
+                circlesSnap.get(i).setLayoutX(pos.getX());
+                circlesSnap.get(i).setLayoutY(pos.getY());
             }
         });
     }
