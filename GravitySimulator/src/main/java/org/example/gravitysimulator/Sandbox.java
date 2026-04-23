@@ -96,6 +96,7 @@ public class Sandbox {
             spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/2);
             currentScale = spaceForPlanets.getScaleX();
         });
+
         typeButtons.getChildren().addAll(zoomPlusBtn,zoomMinusBtn);
 
         // Help button (top-right)
@@ -124,6 +125,7 @@ public class Sandbox {
         StackPane spaceArea = new StackPane(canvas, spaceForPlanets, topBar);
         spaceArea.setStyle("-fx-background-color: black;");
         StackPane.setAlignment(topBar, Pos.TOP_LEFT);
+        spaceArea.setAlignment(spaceForPlanets, Pos.CENTER);
 
         canvas.widthProperty().bind(spaceArea.widthProperty());
         canvas.heightProperty().bind(spaceArea.heightProperty());
@@ -519,23 +521,32 @@ public class Sandbox {
             javafx.geometry.Point2D localPoint = spaceForPlanets.parentToLocal(screenCenterX, screenCenterY);
 
             Vector2 position = new Vector2(localPoint.getX(), localPoint.getY());
+            Circle bodyVisual = new Circle(radius);
+            bodyVisual.setLayoutX(position.getX());
+            bodyVisual.setLayoutY(position.getY());
+
 
             AstralBody body;
             switch (type) {
-                case "Star":     body = new Star(mass, radius, velocity, position);     break;
-                case "Asteroid": body = new Asteroid(mass, radius, velocity, position); break;
-                default:         body = new Planet(mass, radius, velocity, position);   break;
+                case "Star":
+                    body = new Star(mass, radius, velocity, position);
+                    bodyVisual.setFill(Color.YELLOW);
+                    break;
+                case "Asteroid":
+                    body = new Asteroid(mass, radius, velocity, position);
+                    bodyVisual.setFill(Color.GRAY);
+                    break;
+                default:
+                    body = new Planet(mass, radius, velocity, position);
+                    bodyVisual.setFill(Color.BLUE);
+                    break;
             }
 
             body.setTemperature(temperature);
 
-            Circle circle = new Circle(radius);
-            circle.setFill(Color.RED);
-            circle.setLayoutX(position.getX());
-            circle.setLayoutY(position.getY());
-
-            handler.addBody(body, circle);
-            spaceForPlanets.getChildren().add(circle);
+            handler.addBody(body, bodyVisual);
+            spaceForPlanets.getChildren().add(bodyVisual);
+            System.out.println("Number of bodies at this moment(" + System.currentTimeMillis() + "): " + handler.bodies.size());
 
         } catch (NumberFormatException e) {
             System.err.println("Invalid input: please enter valid numbers.");
