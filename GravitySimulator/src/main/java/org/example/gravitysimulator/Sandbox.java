@@ -139,11 +139,11 @@ public class Sandbox {
         TextField massField = createField(60);
         massField.setText("5.97"); // Earth-like mass
 
-        Label  radiusLabel    = createLabel("Radius (m):");
+        Label  radiusLabel    = createLabel("Radius (m × 10¹⁴):");
         TextField radiusField = createField(60);
         radiusField.setText("15");
 
-        Label  velocityLabel    = createLabel("Velocity (m/s):");
+        Label  velocityLabel    = createLabel("Velocity (m × 10¹⁴/s):");
         TextField velocityField = createField(60);
         velocityField.setText("50");
 
@@ -381,9 +381,9 @@ public class Sandbox {
                 "• Mass: Determines gravitational pull strength (kg × 10²⁴)\n" +
                         "  - Larger mass = stronger gravity\n" +
                         "  - Stars typically have much higher mass than planets\n\n" +
-                        "• Radius: Visual size of the body (m)\n" +
+                        "• Radius: Visual size of the body (m× 10¹⁴)\n" +
                         "  - Affects collision detection\n\n" +
-                        "• Velocity: Initial launch speed (m/second)\n" +
+                        "• Velocity: Initial launch speed ((m× 10¹⁴)/second)\n" +
                         "  - Combined with angle to set trajectory\n" +
                         "  - Higher velocity = faster orbit/escape\n\n" +
                         "• Temperature: Surface temperature in Kelvin\n" +
