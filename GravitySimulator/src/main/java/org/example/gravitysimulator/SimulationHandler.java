@@ -215,7 +215,7 @@ public class SimulationHandler {
             double  angle     = Math.random() * 2 * Math.PI;
             Vector2 dir       = new Vector2(Math.cos(angle), Math.sin(angle));
             double massFactor = Math.cbrt(totalMass);
-            double speed = baseDebrisSpeed * (1.5 + 0.00015 * massFactor * (1 + Math.random()*0.2));
+            double speed = baseDebrisSpeed * (1.5+(1*Math.random()));
 
 
 
