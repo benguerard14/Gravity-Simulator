@@ -285,7 +285,7 @@ public class Sandbox {
             case "Star":
                 massField.setText("1989000"); // Solar mass (much larger)
                 radiusField.setText("30");
-                velocityField.setText("10");
+                velocityField.setText("0");
                 tempField.setText("5778"); // Sun surface temperature
                 break;
             case "Asteroid":
@@ -297,7 +297,7 @@ public class Sandbox {
             default: // Planet
                 massField.setText("5.97"); // Earth mass
                 radiusField.setText("15");
-                velocityField.setText("8");
+                velocityField.setText("20");
                 tempField.setText("288"); // Earth average
                 break;
         }
