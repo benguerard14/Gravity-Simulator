@@ -1,7 +1,6 @@
 package org.example.gravitysimulator;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.geometry.*;
 import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.example.gravitysimulator.AstralBodies.Asteroid;
@@ -30,7 +30,6 @@ import static java.lang.Math.pow;
 
 public class Sandbox {
     public static Pane spaceForPlanets = new Pane();
-    public static Group wrapperForMOVEMENT = new Group(spaceForPlanets);
     public static HashSet<KeyCode> keyPressed = new HashSet<>();
     public static double moveAmount = 5;
     public static double currentScale = 1;
@@ -70,6 +69,7 @@ public class Sandbox {
                 "-fx-background-color: black; -fx-text-fill: white;" +
                         "-fx-border-color: white; -fx-border-width: 1.5; -fx-cursor: hand;"
         ));
+
         zoomPlusBtn.setOnAction( e -> {
             spaceForPlanets.setScaleX(spaceForPlanets.getScaleX()/0.5);
             spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/0.5);
@@ -551,5 +551,32 @@ public class Sandbox {
         } catch (NumberFormatException e) {
             System.err.println("Invalid input: please enter valid numbers.");
         }
+    }
+
+    private static void applyZoom(double factor, Scene scene, Group target, Scale scaleTransform) {
+        double oldScale = scaleTransform.getX();
+        double newScale = oldScale * factor;
+
+        // Get zoomContainer's position relative to the scene
+        Bounds boundsInScene = target.localToScene(target.getBoundsInLocal());
+        double nodeOriginX = boundsInScene.getMinX();
+        double nodeOriginY = boundsInScene.getMinY();
+
+        // Screen center in scene coordinates
+        double centerX = scene.getWidth() / 2;
+        double centerY = scene.getHeight() / 2;
+
+        // Pivot in local (pre-scale) coordinates of the group
+        double pivotX = (centerX - nodeOriginX) / oldScale;
+        double pivotY = (centerY - nodeOriginY) / oldScale;
+
+        scaleTransform.setX(newScale);
+        scaleTransform.setY(newScale);
+
+        // Shift translation so pivot stays fixed under screen center
+        target.setTranslateX(target.getTranslateX() + (centerX - nodeOriginX) - pivotX * newScale);
+        target.setTranslateY(target.getTranslateY() + (centerY - nodeOriginY) - pivotY * newScale);
+
+        currentScale = newScale;
     }
 }
