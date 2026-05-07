@@ -40,8 +40,8 @@ public class Sandbox {
         Scene scene = new Scene(root, 800, 600);
 
         // Top-left buttons (Planet, Star, Asteroid)
-        Button planetBtn   = createTypeButton("Planet");
-        Button starBtn     = createTypeButton("Star");
+        Button planetBtn = createTypeButton("Planet");
+        Button starBtn = createTypeButton("Star");
         Button asteroidBtn = createTypeButton("Asteroid");
 
         planetBtn.setStyle(
@@ -70,9 +70,9 @@ public class Sandbox {
                         "-fx-border-color: white; -fx-border-width: 1.5; -fx-cursor: hand;"
         ));
 
-        zoomPlusBtn.setOnAction( e -> {
-            spaceForPlanets.setScaleX(spaceForPlanets.getScaleX()/0.5);
-            spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/0.5);
+        zoomPlusBtn.setOnAction(e -> {
+            spaceForPlanets.setScaleX(spaceForPlanets.getScaleX() / 0.5);
+            spaceForPlanets.setScaleY(spaceForPlanets.getScaleY() / 0.5);
             currentScale = spaceForPlanets.getScaleX();
         });
 
@@ -91,13 +91,13 @@ public class Sandbox {
                 "-fx-background-color: black; -fx-text-fill: white;" +
                         "-fx-border-color: white; -fx-border-width: 1.5; -fx-cursor: hand;"
         ));
-        zoomMinusBtn.setOnAction( e -> {
-            spaceForPlanets.setScaleX(spaceForPlanets.getScaleX()/2);
-            spaceForPlanets.setScaleY(spaceForPlanets.getScaleY()/2);
+        zoomMinusBtn.setOnAction(e -> {
+            spaceForPlanets.setScaleX(spaceForPlanets.getScaleX() / 2);
+            spaceForPlanets.setScaleY(spaceForPlanets.getScaleY() / 2);
             currentScale = spaceForPlanets.getScaleX();
         });
 
-        typeButtons.getChildren().addAll(zoomPlusBtn,zoomMinusBtn);
+        typeButtons.getChildren().addAll(zoomPlusBtn, zoomMinusBtn);
 
         // Help button (top-right)
         Button helpBtn = new Button("?");
@@ -135,29 +135,29 @@ public class Sandbox {
                 drawStars(canvas.getGraphicsContext2D(), canvas.getWidth(), canvas.getHeight()));
 
         // Bottom control panel with default values
-        Label  massLabel    = createLabel("Mass (kg×10²⁴):");
+        Label massLabel = createLabel("Mass (kg×10²⁴):");
         TextField massField = createField(60);
         massField.setText("5.97"); // Earth-like mass
 
-        Label  radiusLabel    = createLabel("Radius (m × 10¹⁴):");
+        Label radiusLabel = createLabel("Radius (m × 10¹⁴):");
         TextField radiusField = createField(60);
         radiusField.setText("15");
 
-        Label  velocityLabel    = createLabel("Velocity (m × 10¹⁴/s):");
+        Label velocityLabel = createLabel("Velocity (m × 10¹⁴/s):");
         TextField velocityField = createField(60);
         velocityField.setText("50");
 
-        Label  tempLabel    = createLabel("Temperature (K):");
+        Label tempLabel = createLabel("Temperature (K):");
         TextField tempField = createField(60);
         tempField.setText("5778"); // Sun-like temperature
 
-        Label  angleLabel    = createLabel("Launch Angle:");
+        Label angleLabel = createLabel("Launch Angle:");
         TextField angleField = createField(60);
         angleField.setEditable(false);
         angleField.setText("0° →");
         angleField.setStyle("-fx-background-color: #333; -fx-text-fill: #4CAF50; -fx-border-color: #888; -fx-font-weight: bold;");
 
-        Slider angleSlider   = new Slider(0, 360, 0);
+        Slider angleSlider = new Slider(0, 360, 0);
         angleSlider.setPrefWidth(160);
         angleSlider.setShowTickMarks(true);
         angleSlider.setShowTickLabels(true);
@@ -506,13 +506,13 @@ public class Sandbox {
                                      TextField mField, TextField rField, TextField vField,
                                      TextField tField, Slider aSlider) {
         try {
-            double mass        = Double.parseDouble(mField.getText());
-            double radius      = Double.parseDouble(rField.getText());
+            double mass = Double.parseDouble(mField.getText());
+            double radius = Double.parseDouble(rField.getText());
             double velocityMag = Double.parseDouble(vField.getText());
             double temperature = Double.parseDouble(tField.getText());
-            double angleDeg    = aSlider.getValue();
+            double angleDeg = aSlider.getValue();
 
-            double rads     = Math.toRadians(angleDeg);
+            double rads = Math.toRadians(angleDeg);
             Vector2 velocity = new Vector2(velocityMag * Math.cos(rads), velocityMag * Math.sin(rads));
             double screenCenterX = canvas.getWidth() / 2;
             double screenCenterY = canvas.getHeight() / 2;
@@ -551,32 +551,5 @@ public class Sandbox {
         } catch (NumberFormatException e) {
             System.err.println("Invalid input: please enter valid numbers.");
         }
-    }
-
-    private static void applyZoom(double factor, Scene scene, Group target, Scale scaleTransform) {
-        double oldScale = scaleTransform.getX();
-        double newScale = oldScale * factor;
-
-        // Get zoomContainer's position relative to the scene
-        Bounds boundsInScene = target.localToScene(target.getBoundsInLocal());
-        double nodeOriginX = boundsInScene.getMinX();
-        double nodeOriginY = boundsInScene.getMinY();
-
-        // Screen center in scene coordinates
-        double centerX = scene.getWidth() / 2;
-        double centerY = scene.getHeight() / 2;
-
-        // Pivot in local (pre-scale) coordinates of the group
-        double pivotX = (centerX - nodeOriginX) / oldScale;
-        double pivotY = (centerY - nodeOriginY) / oldScale;
-
-        scaleTransform.setX(newScale);
-        scaleTransform.setY(newScale);
-
-        // Shift translation so pivot stays fixed under screen center
-        target.setTranslateX(target.getTranslateX() + (centerX - nodeOriginX) - pivotX * newScale);
-        target.setTranslateY(target.getTranslateY() + (centerY - nodeOriginY) - pivotY * newScale);
-
-        currentScale = newScale;
     }
 }
