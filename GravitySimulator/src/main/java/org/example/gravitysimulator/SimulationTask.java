@@ -9,7 +9,7 @@ import java.util.*;
 
 public class SimulationTask implements Runnable {
     private long previousTime;
-    SimulationHandler handler;
+    private SimulationHandler handler;
 
     public SimulationTask(long previousTime, SimulationHandler handler) {
         this.previousTime = previousTime;
@@ -26,17 +26,15 @@ public class SimulationTask implements Runnable {
         // Scale time
         deltaTime = deltaTime * handler.getTimeScale();
 
-        // Physics step — also handles collision resolution and debris staging
+        // Physics step handle collision and debris
         handler.updatePositions(deltaTime);
         handler.checkCollisions();
 
-        // Snapshot the lists while still on the background thread so the
-        // sizes are consistent for the Platform.runLater closure.
+        // Snapshot of lists while still on the background thread sizes for consistency
         final List<AstralBody> bodiesSnap = new ArrayList<>(handler.bodies);
         final List<Circle>     circlesSnap = new ArrayList<>(handler.bodiesInUI);
 
         Platform.runLater(() -> {
-            // Use the minimum of both lists as a safety guard
             int count = Math.min(bodiesSnap.size(), circlesSnap.size());
             for (int i = 0; i < count; i++) {
                 Vector2 pos = bodiesSnap.get(i).getPosition();

@@ -13,7 +13,7 @@ public abstract class AstralBody {
     // Ticks remaining where this body is immune to collisions (used for fresh debris)
     private int spawnImmunityTicks;
 
-    AstralBody(double mass, double radius, Vector2 velocity, Vector2 position){
+    public AstralBody(double mass, double radius, Vector2 velocity, Vector2 position){
         this.mass = mass;
         this.radius = radius;
         this.velocity = velocity;
@@ -22,7 +22,7 @@ public abstract class AstralBody {
         this.spawnImmunityTicks = 0;
     }
 
-    AstralBody(double mass, double radius, Vector2 velocity, Vector2 position, int[] color) {
+    public AstralBody(double mass, double radius, Vector2 velocity, Vector2 position, int[] color) {
         this.mass = mass;
         this.radius = radius;
         this.velocity = velocity;

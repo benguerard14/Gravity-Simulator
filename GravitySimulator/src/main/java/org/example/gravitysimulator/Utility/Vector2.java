@@ -38,16 +38,7 @@ public class Vector2 {
     public Vector2 subtractVector(Vector2 v) {
         return new Vector2(this.x - v.x, this.y - v.y);
     }
-
-    public Vector2 constMul(double c) {
-        return new Vector2(this.x * c, this.y * c);
-    }
-
-    //Incase
-    public static Vector2 directConstMul(Vector2 v, double c) {
-        return new Vector2(v.x * c, v.y * c);
-    }
-
+    
     public double getNorm() {
         return Math.sqrt(x * x + y * y);
     }
